@@ -1,0 +1,1 @@
+.show{display:block}.hide{display:none}.fade{-webkit-animation-name:fade;animation-name:fade;-webkit-animation-duration:1.5s;animation-duration:1.5s}@-webkit-keyframes fade{0%{opacity:0.1}to{opacity:1}}@keyframes fade{0%{opacity:0.1}to{opacity:1}}.block{width:100px;height:100px;background-color:red;position:relative;z-index:10}
