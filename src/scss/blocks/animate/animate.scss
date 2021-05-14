@@ -6,11 +6,11 @@
 }
 .fade {
     animation-name: fade;
-    animation-duration: 1.3s;
+    animation-duration: .7s;
 }
 @keyframes fade {
     0% {
-        opacity: 0.1;
+        opacity: 0.3;
     }
     100% {
         opacity: 1;
