@@ -116,8 +116,7 @@ setClock('.timer', deadLine);
 
 // ----------------Модальные окна----------------
 const modalTrigger = document.querySelectorAll('[data-modal]'),
-      modal = document.querySelector('.modal'),
-      modalClose = document.querySelector('.modal__close');
+      modal = document.querySelector('.modal');
 
 
 // Показывает модальные окна
@@ -144,12 +143,9 @@ function closeModal() {
     document.body.style.overflow = '';
 }
 
-// Скрывает модальные окна
-modalClose.addEventListener('click', closeModal);
-
 // Скрывает по клику на область вокруг модального окна
 modal.addEventListener('click', (e)=> {
-    if (e.target === modal) {
+    if (e.target === modal || e.target.getAttribute('data-close') == '') {
         closeModal();
     }
 });
@@ -249,5 +245,84 @@ new MenuCard(
 
 // -----------/Создание карточек товара через классы ES6 + rest и параметр по умолчанию----------
 
+// ----------------Отправка данных с формы----------------
+const forms = document.querySelectorAll('form');
+
+const message = {
+    loading: 'img/form/spinner.svg',
+    success: 'Gracias! Скоро мы с вами свяжемся!',
+    failure: 'Oh, no... Error!!!'
+};
+
+forms.forEach(item => {
+    postData(item);
+});
+
+function postData(form) {
+    form.addEventListener('submit', (e)=> {
+        e.preventDefault();
+
+        const statusMessage = document.createElement('img');
+        statusMessage.src = message.loading;
+        statusMessage.style.cssText = `
+            display: block;
+            margin: 0 auto;
+        `;
+        form.insertAdjacentElement('afterend', statusMessage);
+
+        const request = new XMLHttpRequest();
+        request.open('POST', 'server.php');
+
+        request.setRequestHeader('Content-type', 'application/json');
+        const formData = new FormData(form);
+
+        const object = {};
+        formData.forEach(function(value, key) {
+            object[key] = value;
+        });
+
+        const json = JSON.stringify(object);
+
+        request.send(json);
+
+        request.addEventListener('load', ()=> {
+            if (request.status === 200) {
+                console.log(request.response);
+                showThanksModal(message.success);
+                form.reset();
+                statusMessage.remove();
+            } else {
+                showThanksModal(message.failure);
+            }
+        });
+    });
+}
+
+// ======== Работа с пользователем в модальном окне
+
+function showThanksModal(message) {
+    const prevModalDialog = document.querySelector('.modal__dialog');
+    
+    prevModalDialog.classList.add('hide');
+    openModal();
+
+    const thanksModal = document.createElement('div');
+    thanksModal.classList.add('modal__dialog');
+    thanksModal.innerHTML = `
+        <div class="modal__content">
+            <div class="modal__close" data-close>×</div>
+            <div class="modal__title">${message}</div>
+        </div>
+    `;
+
+    document.querySelector('.modal').append(thanksModal);
+    setTimeout(()=> {
+        thanksModal.remove();
+        prevModalDialog.classList.add('show');
+        prevModalDialog.classList.remove('hide');
+        closeModal();
+    }, 4000);
+}
+// ----------------/Отправка данных с формы----------------
 
 });
