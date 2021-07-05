@@ -1,2 +1,2 @@
-# projectFood.github.io
+# projectFood
 Сайт доставки еды (общий блок кода, без гитхаб пейджес)
